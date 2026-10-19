@@ -1,0 +1,13 @@
+# Activos y contenido
+
+- Logos: `marca.png` e `Isotipo.png` del proyecto original ATS. Copiados a `src/assets/brand/` sin alterar los originales.
+- Favicon: reutilizado del proyecto ATS.
+- Billonchok: captura de su web pública `https://www.billonchok.com/es/`, tomada el 17 de octubre de 2026. Se incluyó primero por indicación del propietario de ATS. La descripción se basa en el catálogo, idiomas y pedidos por WhatsApp observados en la web.
+- Glamping Look: `proyectouno.png` del portafolio original. El enlace `https://www.glampinglook.com/` respondía durante la revisión.
+- Decorteja: `proyectoseis.png`. El sitio actual `decorteja.com` difiere de la captura conservada. Se muestra el diseño como parte de la selección y no se vincula a la implementación actual.
+- Vital Health MC: `proyectotres.png`. Su dominio anterior `vitalhealthmc.com` no resolvía durante la revisión.
+- Vallicoffee: `proyectodos.webp`. Su dominio anterior `vallicoffee.com` no resolvía durante la revisión.
+
+Los proyectos sin URL se pueden abrir en una ventana con la imagen y descripción. No se inventan nuevos dominios, métricas, reseñas ni testimonios. Los enlaces se editan en `src/data/projects.ts`.
+
+Las imágenes se optimizan a WebP al compilar mediante `astro:assets`. Geist y Geist Mono se incluyen mediante Fontsource con sus licencias del paquete. Las tarjetas sociales son gráficos propios con la marca de ATS y textos por idioma.

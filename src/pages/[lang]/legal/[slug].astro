@@ -1,0 +1,97 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Footer from '@/components/Footer.astro';
+import { languages, getUI, type Language } from '@/i18n/ui';
+import { getLegalHref, legalDocuments, legalKeys, legalSlugs, type LegalKey } from '@/data/legal';
+
+export function getStaticPaths() {
+  return languages.flatMap((lang) =>
+    legalKeys.map((key) => ({
+      params: { lang, slug: legalSlugs[lang][key] },
+      props: { lang, legalKey: key },
+    })),
+  );
+}
+
+interface Props {
+  lang: Language;
+  legalKey: LegalKey;
+}
+
+const { lang, legalKey } = Astro.props;
+const document = legalDocuments[lang][legalKey];
+const t = getUI(lang);
+const canonicalPath = getLegalHref(lang, legalKey);
+const alternatePaths = {
+  es: getLegalHref('es', legalKey),
+  en: getLegalHref('en', legalKey),
+};
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${document.title} | ATS Web Studio`}
+  description={document.description}
+  canonicalPath={canonicalPath}
+  alternatePaths={alternatePaths}
+>
+  <main id="main-content" class="legal-page page-gutter">
+    <nav class="legal-nav font-mono" aria-label={t.footer.legalLabel}>
+      <a href={`/${lang}/`}>ATS WEB STUDIO ←</a>
+      <div>
+        {legalKeys.map((key) => (
+          <a href={getLegalHref(lang, key)} aria-current={key === legalKey ? 'page' : undefined}>
+            {key === 'privacy'
+              ? t.footer.privacy
+              : key === 'terms'
+                ? t.footer.terms
+                : t.footer.refunds}
+          </a>
+        ))}
+      </div>
+    </nav>
+
+    <article class="legal-article">
+      <header class="legal-heading">
+        <p class="section-label font-mono">LEGAL / {document.eyebrow}</p>
+        <h1>{document.title}</h1>
+        <p>{document.intro}</p>
+        <time datetime="2026-10-18" class="font-mono">
+          {document.updated}
+        </time>
+      </header>
+
+      <div class="legal-content">
+        {document.sections.map((section) => (
+          <section>
+            <h2>{section.title}</h2>
+            {section.paragraphs?.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+            {section.bullets && (
+              <ul>
+                {section.bullets.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            )}
+          </section>
+        ))}
+
+        <section class="legal-sources">
+          <h2>{lang === 'es' ? 'Fuentes oficiales' : 'Official sources'}</h2>
+          <ul>
+            {document.sources.map((source) => (
+              <li>
+                <a href={source.href} target="_blank" rel="noopener noreferrer">
+                  {source.label} ↗
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </article>
+  </main>
+  <Footer lang={lang} homeHref={`/${lang}/`} />
+</BaseLayout>

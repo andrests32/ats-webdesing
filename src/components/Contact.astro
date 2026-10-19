@@ -1,0 +1,116 @@
+---
+import { getUI, type Language } from '@/i18n/ui';
+import { site } from '@/data/site';
+import SectionLabel from './SectionLabel.astro';
+import Arrow from './Arrow.astro';
+import { getLegalHref } from '@/data/legal';
+interface Props {
+  lang: Language;
+}
+const t = getUI(Astro.props.lang);
+---
+
+<section id="contacto" class="contact page-gutter" aria-labelledby="contact-title">
+  <SectionLabel number="05" text={t.contact.label} />
+  <div class="contact-grid">
+    <h2 id="contact-title" data-reveal>
+      {t.contact.lines.map((line) => (
+        <span>{line}</span>
+      ))}
+    </h2>
+    <div class="contact-aside">
+      <p>{t.contact.description}</p>
+      <button
+        class="bracket-link contact-cta"
+        type="button"
+        data-dialog-open="contact-dialog"
+        aria-haspopup="dialog"
+      >
+        <span aria-hidden="true">[</span>
+        <span>
+          {t.contact.start}
+          <Arrow />
+        </span>
+        <span aria-hidden="true">]</span>
+      </button>
+    </div>
+  </div>
+  <div class="contact-links">
+    <a href={`mailto:${site.email}`}>
+      <span class="font-mono">EMAIL</span>
+      <span>{site.email}</span>
+      <Arrow />
+    </a>
+    <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener noreferrer">
+      <span class="font-mono">WHATSAPP</span>
+      <span>{t.contact.whatsapp}</span>
+      <Arrow />
+    </a>
+  </div>
+</section>
+<dialog
+  id="contact-dialog"
+  class="contact-dialog"
+  aria-labelledby="contact-dialog-title"
+  data-lenis-prevent
+>
+  <div class="dialog-top">
+    <span class="font-mono">05 / {t.sections[4]}</span>
+    <button class="close-button" type="button" data-dialog-close>
+      {t.close}
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <h2 id="contact-dialog-title">{t.contact.formTitle}</h2>
+  <p>{t.contact.formIntro}</p>
+  <form
+    id="project-inquiry"
+    action={`https://wa.me/${site.whatsapp}`}
+    method="get"
+    target="_blank"
+    data-phone={site.whatsapp}
+    data-subject={t.contact.subject}
+  >
+    <div class="form-grid">
+      <label>
+        {t.contact.name}
+        <input name="name" autocomplete="name" required maxlength="100" />
+      </label>
+      <label>
+        {t.contact.emailLabel}
+        <input name="email" type="email" autocomplete="email" required maxlength="254" />
+      </label>
+    </div>
+    <label>
+      {t.contact.service}
+      <select name="service">
+        {t.contact.serviceOptions.map((option) => (
+          <option>{option}</option>
+        ))}
+      </select>
+    </label>
+    <label>
+      {t.contact.message}
+      <textarea
+        name="message"
+        rows="4"
+        required
+        minlength="10"
+        maxlength="2000"
+        placeholder={t.contact.messagePlaceholder}
+      ></textarea>
+    </label>
+    <button class="form-submit" type="submit">
+      {t.contact.submit}
+      <Arrow />
+    </button>
+    <p class="form-note">{t.contact.note}</p>
+    <p class="form-privacy">
+      {t.contact.privacyPrefix}
+      <a href={getLegalHref(Astro.props.lang, 'privacy')}>{t.contact.privacyLink}</a>.
+    </p>
+    <a class="form-fallback" href={`mailto:${site.email}`}>
+      {t.contact.fallback}
+    </a>
+  </form>
+</dialog>

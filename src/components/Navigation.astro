@@ -1,0 +1,37 @@
+---
+import { getUI, type Language } from '@/i18n/ui';
+import { sectionIds, site } from '@/data/site';
+interface Props {
+  lang: Language;
+  sectionBase?: string;
+}
+const { lang, sectionBase = '' } = Astro.props;
+const t = getUI(lang);
+---
+
+<dialog id="menu-dialog" class="menu-dialog" aria-label={t.navigation} data-lenis-prevent>
+  <div class="dialog-top">
+    <span class="font-mono">■ {t.menu} / 01–05</span>
+    <button class="close-button" type="button" data-dialog-close>
+      {t.close}
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <nav aria-label={t.navigation}>
+    <ol>
+      {sectionIds.map((id, i) => (
+        <li>
+          <a href={`${sectionBase}#${id}`} data-menu-link>
+            <span class="font-mono">0{i + 1}</span>
+            <span>{t.sections[i]}</span>
+            <span class="menu-cue font-mono">[{t.cues[i]}]</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+  <div class="menu-footer">
+    <a href={`mailto:${site.email}`}>{site.email}</a>
+    <span class="font-mono">ECUADOR / ATS WEB STUDIO</span>
+  </div>
+</dialog>

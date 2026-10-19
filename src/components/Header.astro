@@ -1,0 +1,58 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@/assets/brand/ats-logo.png';
+import { getUI, type Language } from '@/i18n/ui';
+interface Props {
+  lang: Language;
+  reveal?: boolean;
+}
+const { lang, reveal = false } = Astro.props;
+const Header = reveal ? 'div' : 'header';
+const t = getUI(lang);
+---
+
+<Header class="site-header page-gutter" id={reveal ? undefined : 'inicio'}>
+  <a class="brand" href={`/${lang}/`} aria-label="ATS Web Studio">
+    <Image src={logo} width={108} height={32} alt="ATS" loading="eager" format="webp" />
+    <span>WEB STUDIO</span>
+  </a>
+  <div class="header-actions">
+    <nav class="language-switch font-mono" aria-label={t.languageName}>
+      <a
+        href="/es/"
+        lang="es"
+        hreflang="es"
+        aria-current={lang === 'es' ? 'page' : undefined}
+        data-language={reveal ? undefined : true}
+      >
+        ES
+      </a>
+      <span aria-hidden="true">/</span>
+      <a
+        href="/en/"
+        lang="en"
+        hreflang="en"
+        aria-current={lang === 'en' ? 'page' : undefined}
+        data-language={reveal ? undefined : true}
+      >
+        EN
+      </a>
+    </nav>
+    <button
+      class="menu-toggle"
+      type="button"
+      data-dialog-open={reveal ? undefined : 'menu-dialog'}
+      aria-controls={reveal ? undefined : 'menu-dialog'}
+      aria-haspopup="dialog"
+      aria-expanded="false"
+    >
+      <span>{t.menu}</span>
+      <span class="menu-mark" aria-hidden="true">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+      </span>
+    </button>
+  </div>
+</Header>

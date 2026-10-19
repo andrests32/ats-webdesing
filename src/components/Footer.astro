@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@/assets/brand/ats-logo.png';
+import { getUI, type Language } from '@/i18n/ui';
+import { sectionIds, site } from '@/data/site';
+import { getLegalHref, legalKeys } from '@/data/legal';
+interface Props {
+  lang: Language;
+  homeHref?: string;
+}
+const { lang, homeHref = '#inicio' } = Astro.props;
+const t = getUI(lang);
+const legalLabels = {
+  privacy: t.footer.privacy,
+  terms: t.footer.terms,
+  refunds: t.footer.refunds,
+};
+const onLandingPage = homeHref.startsWith('#');
+const getSectionHref = (section: (typeof sectionIds)[number]) =>
+  onLandingPage ? `#${section}` : `/${lang}/#${section}`;
+---
+
+<footer class="footer page-gutter">
+  <div class="footer-top font-mono">
+    <span>{t.footer.location}</span>
+    <a href={homeHref}>{t.footer.top} ↑</a>
+  </div>
+  <nav class="footer-sections" aria-label={t.footer.sectionsLabel}>
+    {sectionIds.map((section, index) => (
+      <a href={getSectionHref(section)}>
+        <span class="font-mono">{String(index + 1).padStart(2, '0')}</span>
+        <span>{t.sections[index]}</span>
+      </a>
+    ))}
+  </nav>
+  <div class="footer-brand">
+    <Image src={logo} width={1600} alt="ATS" format="webp" loading="lazy" />
+    <span>
+      WEB
+      <br />
+      STUDIO
+    </span>
+  </div>
+  <nav class="footer-legal font-mono" aria-label={t.footer.legalLabel}>
+    {legalKeys.map((key) => (
+      <a href={getLegalHref(lang, key)}>{legalLabels[key]} ↗</a>
+    ))}
+  </nav>
+  <div class="footer-bottom font-mono">
+    <span>© {new Date().getFullYear()} ATS WEB STUDIO</span>
+    <span>{t.footer.rights}</span>
+    <a href={`mailto:${site.email}`}>{site.email.toUpperCase()} ↗</a>
+  </div>
+</footer>

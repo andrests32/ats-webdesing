@@ -1,0 +1,4 @@
+{
+  "folders": [{ "path": ".", "name": "ATS Web Studio" }],
+  "settings": { "window.title": "ATS Web Studio · ${activeEditorShort}" },
+}

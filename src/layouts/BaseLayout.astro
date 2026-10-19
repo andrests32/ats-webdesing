@@ -1,0 +1,138 @@
+---
+import '@fontsource-variable/geist/wght.css';
+import '@fontsource-variable/geist-mono/wght.css';
+import '@/styles/global.css';
+import { getUI, type Language } from '@/i18n/ui';
+import { site } from '@/data/site';
+interface Props {
+  lang: Language;
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  canonicalPath?: string;
+  alternatePaths?: { es: string; en: string };
+}
+const {
+  lang,
+  title,
+  description,
+  noindex = false,
+  canonicalPath = `/${lang}/`,
+  alternatePaths = { es: '/es/', en: '/en/' },
+} = Astro.props;
+const t = getUI(lang);
+const origin = Astro.site || new URL('http://localhost:4321');
+const canonical = new URL(canonicalPath, origin);
+const isPublic = Boolean(import.meta.env.PUBLIC_SITE_URL);
+const pageTitle = title || t.title;
+const pageDescription = description || t.description;
+const businessId = new URL('/#business', origin).href;
+const websiteId = new URL('/#website', origin).href;
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ProfessionalService',
+      '@id': businessId,
+      name: site.name,
+      url: new URL(`/${lang}/`, origin).href,
+      email: site.email,
+      telephone: `+${site.whatsapp}`,
+      description: t.description,
+      image: new URL(`/social-${lang}.png`, origin).href,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: site.city,
+        addressRegion: site.region,
+        addressCountry: site.countryCode,
+      },
+      areaServed: [
+        { '@type': 'City', name: site.city },
+        { '@type': 'AdministrativeArea', name: site.region },
+        { '@type': 'Country', name: site.country },
+      ],
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        email: site.email,
+        telephone: `+${site.whatsapp}`,
+        availableLanguage: ['Spanish', 'English'],
+      },
+      knowsAbout: ['Web design', 'Web development', 'Website redesign', 'Technical SEO'],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: lang === 'es' ? 'Servicios de diseño web' : 'Web design services',
+        itemListElement: t.services.items.map((service) => ({
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: service.title },
+        })),
+      },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      url: origin.href,
+      name: site.name,
+      publisher: { '@id': businessId },
+      inLanguage: ['es-EC', 'en'],
+    },
+    {
+      '@type': 'WebPage',
+      '@id': `${canonical.href}#webpage`,
+      url: canonical.href,
+      name: pageTitle,
+      description: pageDescription,
+      inLanguage: lang === 'es' ? 'es-EC' : 'en',
+      isPartOf: { '@id': websiteId },
+      about: { '@id': businessId },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1eada" />
+    <meta name="description" content={pageDescription} />
+    <meta
+      name="robots"
+      content={
+        isPublic && !noindex ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'
+      }
+    />
+    <title>{pageTitle}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es-EC" href={new URL(alternatePaths.es, origin)} />
+    <link rel="alternate" hreflang="en" href={new URL(alternatePaths.en, origin)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(alternatePaths.es, origin)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_EC' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_EC'} />
+    <meta property="og:image" content={new URL(`/social-${lang}.png`, origin)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={pageTitle} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={new URL(`/social-${lang}.png`, origin)} />
+    <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">
+      {t.skip}
+    </a>
+    <slot />
+    <script>
+      import '@/scripts/main';
+    </script>
+  </body>
+</html>

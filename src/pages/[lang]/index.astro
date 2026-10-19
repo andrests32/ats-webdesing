@@ -1,0 +1,39 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/Header.astro';
+import Hero from '@/components/Hero.astro';
+import Work from '@/components/Work.astro';
+import Services from '@/components/Services.astro';
+import About from '@/components/About.astro';
+import Contact from '@/components/Contact.astro';
+import Footer from '@/components/Footer.astro';
+import Navigation from '@/components/Navigation.astro';
+import { languages, type Language } from '@/i18n/ui';
+
+export function getStaticPaths() {
+  return languages.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Language;
+---
+
+<BaseLayout lang={lang}>
+  <div class="site-shell">
+    <Header lang={lang} />
+    <main id="main-content">
+      <Hero lang={lang} />
+      <div class="work-motion">
+        <Work lang={lang} />
+        <Work lang={lang} reveal />
+      </div>
+      <Services lang={lang} />
+      <About lang={lang} />
+      <Contact lang={lang} />
+    </main>
+    <Footer lang={lang} />
+    <div class="hero-reveal" aria-hidden="true" inert>
+      <Header lang={lang} reveal />
+      <Hero lang={lang} reveal />
+    </div>
+  </div>
+  <Navigation lang={lang} />
+</BaseLayout>

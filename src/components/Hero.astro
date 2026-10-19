@@ -1,0 +1,49 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import Arrow from './Arrow.astro';
+import { getUI, type Language } from '@/i18n/ui';
+interface Props {
+  lang: Language;
+  reveal?: boolean;
+}
+const t = getUI(Astro.props.lang);
+const { reveal = false } = Astro.props;
+const Heading = reveal ? 'p' : 'h1';
+---
+
+<section class="hero page-gutter" aria-labelledby={reveal ? undefined : 'hero-title'}>
+  <div class="hero-main">
+    <SectionLabel number="01" text={t.hero.label} />
+    <Heading id={reveal ? undefined : 'hero-title'} class="hero-title">
+      {t.hero.lines.map((line) => (
+        <span class="line-mask">
+          <span data-hero-line>{line}</span>
+        </span>
+      ))}
+    </Heading>
+    <p class="hero-description" data-hero-description>
+      {t.hero.description}
+    </p>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-location font-mono">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>{t.hero.location}</span>
+      <time data-local-time aria-label="Ecuador">
+        UTC−5
+      </time>
+    </div>
+    <a class="hero-scroll font-mono" href="#proyectos">
+      {t.hero.scroll}
+      <span aria-hidden="true">↓</span>
+    </a>
+    <a class="bracket-link hero-cta" href="#contacto">
+      <span aria-hidden="true">[</span>
+      <span>
+        {t.hero.cta}
+        <Arrow />
+      </span>
+      <span aria-hidden="true">]</span>
+    </a>
+  </div>
+</section>

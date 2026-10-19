@@ -1,0 +1,54 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/Header.astro';
+import Navigation from '@/components/Navigation.astro';
+import Arrow from '@/components/Arrow.astro';
+import { getUI } from '@/i18n/ui';
+
+const t = getUI('es');
+---
+
+<BaseLayout
+  lang="es"
+  title="Página no encontrada | ATS Web Studio"
+  description={t.notFound.description}
+  canonicalPath="/404"
+  alternatePaths={{ es: '/404', en: '/404' }}
+  noindex
+>
+  <div class="not-found-shell">
+    <Header lang="es" />
+    <main id="main-content" class="not-found page-gutter">
+      <div class="not-found-meta font-mono">
+        <span>
+          <i aria-hidden="true"></i>
+          {t.notFound.kicker}
+        </span>
+        <span>ATS WEB STUDIO / ZAMORA, EC</span>
+      </div>
+
+      <p class="not-found-number" aria-hidden="true">
+        404
+      </p>
+
+      <div class="not-found-content">
+        <h1>{t.notFound.title}</h1>
+        <div class="not-found-aside">
+          <p>{t.notFound.description}</p>
+          <nav class="not-found-actions" aria-label="Opciones para continuar">
+            <a class="not-found-primary" href="/es/">
+              <span>{t.notFound.home}</span>
+              <Arrow />
+            </a>
+            <a href="/es/#proyectos">{t.notFound.projects} ↗</a>
+            <a href="/es/#contacto">{t.notFound.contact} ↗</a>
+            <a href="/en/" lang="en">
+              English version ↗
+            </a>
+          </nav>
+        </div>
+      </div>
+    </main>
+  </div>
+  <Navigation lang="es" sectionBase="/es/" />
+</BaseLayout>
