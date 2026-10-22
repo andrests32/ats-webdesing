@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { initHeroReveal } from './hero-reveal';
+import { initHeroReveal, initMobileHeroReveal } from './hero-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -239,6 +239,10 @@ async function initMotion() {
       '(min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
       initHeroReveal,
     );
+    motionMedia.add(
+      '(max-width: 767px) and (prefers-reduced-motion: no-preference)',
+      initMobileHeroReveal,
+    );
     motionMedia.add('(prefers-reduced-motion: no-preference)', () => {
       const lineCount = document.querySelectorAll('main [data-hero-line]').length;
       const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -264,6 +268,38 @@ async function initMotion() {
           duration: 0.85,
           ease: 'power2.out',
           scrollTrigger: { trigger: element, start: 'top 92%', once: true },
+        });
+      });
+
+      document.querySelectorAll<HTMLElement>('[data-scroll-scene]').forEach((section) => {
+        const label = section.querySelector<HTMLElement>('.section-label');
+        const elements = [
+          ...(label ? [label] : []),
+          ...section.querySelectorAll<HTMLElement>('[data-scroll-reveal]'),
+        ];
+
+        elements.forEach((element) => {
+          const direction = element.dataset.scrollReveal || 'left';
+          const horizontal = direction === 'left' ? -72 : direction === 'right' ? 72 : 0;
+          const vertical = direction === 'up' ? 68 : 32;
+
+          gsap.fromTo(
+            element,
+            { x: horizontal, y: vertical, autoAlpha: 0 },
+            {
+              x: 0,
+              y: 0,
+              autoAlpha: 1,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: element,
+                start: 'clamp(top 96%)',
+                end: 'clamp(top 68%)',
+                scrub: 0.55,
+                invalidateOnRefresh: true,
+              },
+            },
+          );
         });
       });
     });

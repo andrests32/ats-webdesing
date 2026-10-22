@@ -24,6 +24,17 @@ const Heading = reveal ? 'p' : 'h1';
     <p class="hero-description" data-hero-description>
       {t.hero.description}
     </p>
+    <button
+      class="gyro-control font-mono"
+      type="button"
+      hidden
+      aria-pressed="false"
+      data-gyro-enable={reveal ? undefined : true}
+      data-active-label={t.hero.motionActive}
+    >
+      <span aria-hidden="true"></span>
+      <span data-gyro-label>{t.hero.motion}</span>
+    </button>
   </div>
   <div class="hero-bottom">
     <div class="hero-location font-mono">

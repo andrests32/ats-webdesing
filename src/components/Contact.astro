@@ -10,15 +10,20 @@ interface Props {
 const t = getUI(Astro.props.lang);
 ---
 
-<section id="contacto" class="contact page-gutter" aria-labelledby="contact-title">
+<section
+  id="contacto"
+  class="contact page-gutter"
+  aria-labelledby="contact-title"
+  data-scroll-scene
+>
   <SectionLabel number="05" text={t.contact.label} />
   <div class="contact-grid">
-    <h2 id="contact-title" data-reveal>
+    <h2 id="contact-title" data-scroll-reveal="left">
       {t.contact.lines.map((line) => (
         <span>{line}</span>
       ))}
     </h2>
-    <div class="contact-aside">
+    <div class="contact-aside" data-scroll-reveal="right">
       <p>{t.contact.description}</p>
       <button
         class="bracket-link contact-cta"
@@ -36,12 +41,17 @@ const t = getUI(Astro.props.lang);
     </div>
   </div>
   <div class="contact-links">
-    <a href={`mailto:${site.email}`}>
+    <a href={`mailto:${site.email}`} data-scroll-reveal="left">
       <span class="font-mono">EMAIL</span>
       <span>{site.email}</span>
       <Arrow />
     </a>
-    <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener noreferrer">
+    <a
+      href={`https://wa.me/${site.whatsapp}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-scroll-reveal="right"
+    >
       <span class="font-mono">WHATSAPP</span>
       <span>{t.contact.whatsapp}</span>
       <Arrow />

@@ -1,8 +1,8 @@
 import billonchok from '@/assets/projects/billonchok.png';
 import glamping from '@/assets/projects/glamping-look.png';
-import decorteja from '@/assets/projects/decorteja.png';
+import luxen from '@/assets/projects/inmobiliaria-luxen.png';
 import vital from '@/assets/projects/vital-health.png';
-import vallicoffee from '@/assets/projects/vallicoffee.webp';
+import castilloReal from '@/assets/projects/hosteria-castillo-real.png';
 import type { Language } from '@/i18n/ui';
 
 // Display order is intentional. Change this array to reorder the portfolio.
@@ -46,28 +46,28 @@ const projects = [
     },
   },
   {
-    id: 'decorteja',
-    name: 'Decorteja',
-    image: decorteja,
-    url: null,
+    id: 'inmobiliaria-luxen',
+    name: 'Inmobiliaria Luxen',
+    image: luxen,
+    url: 'https://realstate-liart.vercel.app/',
     es: {
-      category: 'ARQUITECTURA / PRODUCTO',
-      scope: 'Diseño web · Catálogo',
+      category: 'INMOBILIARIA / CATÁLOGO',
+      scope: 'Diseño · Desarrollo web',
       description:
-        'Una propuesta digital para explorar tejas, pisos y acabados. El producto y sus aplicaciones, al centro de la experiencia.',
+        'Una experiencia inmobiliaria para descubrir propiedades, filtrar oportunidades y conectar con asesoría especializada en Ecuador.',
     },
     en: {
-      category: 'ARCHITECTURE / PRODUCT',
-      scope: 'Web design · Catalog',
+      category: 'REAL ESTATE / CATALOG',
+      scope: 'Design · Web development',
       description:
-        'A digital design for exploring roof tiles, flooring and finishes. Products and their applications at the center of the experience.',
+        'A real estate experience for discovering properties, filtering opportunities and connecting with expert guidance in Ecuador.',
     },
   },
   {
     id: 'vital-health',
     name: 'Vital Health MC',
     image: vital,
-    url: null,
+    url: 'https://vital-health-iota.vercel.app/',
     es: {
       category: 'BIENESTAR / PRODUCTO',
       scope: 'Diseño · Desarrollo web',
@@ -82,21 +82,21 @@ const projects = [
     },
   },
   {
-    id: 'vallicoffee',
-    name: 'Vallicoffee',
-    image: vallicoffee,
-    url: null,
+    id: 'hosteria-castillo-real',
+    name: 'Hostería Castillo Real',
+    image: castilloReal,
+    url: 'https://hosteriacastilloreal.vercel.app/',
     es: {
-      category: 'CAFÉ / EXPERIENCIA DE MARCA',
-      scope: 'Diseño · Landing page',
+      category: 'TURISMO / HOSPEDAJE',
+      scope: 'Diseño · Desarrollo web',
       description:
-        'El carácter de una marca de café, llevado a la web. Una landing centrada en el producto y su identidad.',
+        'Una experiencia digital para presentar habitaciones, gastronomía y eventos en un entorno natural, con acceso directo a reservas.',
     },
     en: {
-      category: 'COFFEE / BRAND EXPERIENCE',
-      scope: 'Design · Landing page',
+      category: 'TRAVEL / HOSPITALITY',
+      scope: 'Design · Web development',
       description:
-        'The character of a coffee brand, translated to the web. A landing page centered on the product and its identity.',
+        'A digital experience showcasing rooms, dining and events in a natural setting, with direct access to reservations.',
     },
   },
 ] as const;

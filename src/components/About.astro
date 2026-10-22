@@ -7,29 +7,29 @@ interface Props {
 const t = getUI(Astro.props.lang);
 ---
 
-<section id="estudio" class="about page-gutter" aria-labelledby="about-title">
+<section id="estudio" class="about page-gutter" aria-labelledby="about-title" data-scroll-scene>
   <SectionLabel number="04" text={t.about.label} />
   <div class="about-grid">
-    <h2 id="about-title" data-reveal>
+    <h2 id="about-title" data-scroll-reveal="left">
       {t.about.lines.map((line) => (
         <span>{line}</span>
       ))}
     </h2>
-    <div class="about-copy" data-reveal>
+    <div class="about-copy" data-scroll-reveal="right">
       <p>{t.about.intro}</p>
       <p>{t.about.description}</p>
     </div>
   </div>
   <ol class="process-list">
     {t.about.values.map((v, i) => (
-      <li data-reveal>
+      <li data-scroll-reveal={i === 0 ? 'left' : i === 2 ? 'right' : 'up'}>
         <span class="font-mono">0{i + 1} /</span>
         <h3>{v.title}</h3>
         <p>{v.text}</p>
       </li>
     ))}
   </ol>
-  <div class="about-signature font-mono">
+  <div class="about-signature font-mono" data-scroll-reveal="up">
     <span class="status-dot" aria-hidden="true"></span>
     {t.about.signature}
     <span>ATS</span>

@@ -28,6 +28,8 @@ export const ui = {
       location: 'DESDE ZAMORA, ECUADOR, PARA EL MUNDO',
       cta: 'Hablemos',
       scroll: 'Explorar el trabajo',
+      motion: 'Activar movimiento',
+      motionActive: 'Movimiento activo',
     },
     work: {
       label: 'Trabajo seleccionado',
@@ -168,6 +170,8 @@ export const ui = {
       location: 'FROM ZAMORA, ECUADOR, TO THE WORLD',
       cta: 'Let’s talk',
       scroll: 'Explore the work',
+      motion: 'Enable motion',
+      motionActive: 'Motion active',
     },
     work: {
       label: 'Selected work',
