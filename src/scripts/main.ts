@@ -1,7 +1,8 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { initHeroReveal, initMobileHeroReveal } from './hero-reveal';
+import { initHeroReveal } from './hero-reveal';
+import { initSectionReveals } from './section-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -236,86 +237,43 @@ async function initMotion() {
   await document.fonts.ready;
   if (document.querySelector('.hero')) {
     motionMedia.add(
-      '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
+      '(min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
       initHeroReveal,
     );
     motionMedia.add(
-      '(pointer: coarse) and (prefers-reduced-motion: no-preference), (hover: none) and (prefers-reduced-motion: no-preference)',
-      initMobileHeroReveal,
+      {
+        motion: '(prefers-reduced-motion: no-preference)',
+        compact: '(max-width: 767px), (pointer: coarse)',
+      },
+      (context) => {
+        if (!context.conditions?.motion) return;
+        const compact = Boolean(context.conditions.compact);
+        const distance = compact ? 28 : 72;
+        const intro = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.85 } });
+        intro
+          .from('.hero .section-label', { x: -distance, autoAlpha: 0 }, 0)
+          .from('.hero-title', { x: -distance, y: compact ? 24 : 32, autoAlpha: 0 }, 0.1)
+          .from('[data-hero-description]', { x: distance, y: 18, autoAlpha: 0 }, 0.25)
+          .from('.hero-bottom', { y: compact ? 24 : 40, autoAlpha: 0 }, 0.4);
+
+        initSectionReveals(compact);
+
+        // Natural scrolling keeps every project reachable as the portfolio grows.
+        projectRows.forEach((row, index) => {
+          ScrollTrigger.create({
+            trigger: row,
+            start: 'top 50%',
+            end: 'bottom 50%',
+            onEnter: () => focusProject(index),
+            onEnterBack: () => focusProject(index),
+          });
+        });
+      },
     );
-    motionMedia.add('(prefers-reduced-motion: no-preference)', () => {
-      const lineCount = document.querySelectorAll('main [data-hero-line]').length;
-      const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      intro
-        .from(
-          '[data-hero-line]',
-          {
-            yPercent: 105,
-            opacity: 0,
-            duration: 1.05,
-            // Keep each visible line and its decorative color layer in sync.
-            stagger: (index) => (index % lineCount) * 0.085,
-          },
-          0,
-        )
-        .from('[data-hero-description]', { y: 16, opacity: 0, duration: 0.7 }, 0.4)
-        .from('.hero-bottom', { opacity: 0, y: 12, duration: 0.7 }, 0.6);
-
-      document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((element) => {
-        gsap.from(element, {
-          y: 30,
-          opacity: 0.15,
-          duration: 0.85,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: element, start: 'top 92%', once: true },
-        });
-      });
-
-      document.querySelectorAll<HTMLElement>('[data-scroll-scene]').forEach((section) => {
-        const label = section.querySelector<HTMLElement>('.section-label');
-        const elements = [
-          ...(label ? [label] : []),
-          ...section.querySelectorAll<HTMLElement>('[data-scroll-reveal]'),
-        ];
-
-        elements.forEach((element) => {
-          const direction = element.dataset.scrollReveal || 'left';
-          const horizontal = direction === 'left' ? -72 : direction === 'right' ? 72 : 0;
-          const vertical = direction === 'up' ? 68 : 32;
-
-          gsap.fromTo(
-            element,
-            { x: horizontal, y: vertical, autoAlpha: 0 },
-            {
-              x: 0,
-              y: 0,
-              autoAlpha: 1,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: element,
-                start: 'clamp(top 96%)',
-                end: 'clamp(top 68%)',
-                scrub: 0.55,
-                invalidateOnRefresh: true,
-              },
-            },
-          );
-        });
-      });
-    });
 
     motionMedia.add(
       '(min-width: 1100px) and (min-height: 800px) and (prefers-reduced-motion: no-preference)',
       () => {
-        ScrollTrigger.create({
-          trigger: '.work-motion',
-          start: 'top top',
-          end: () => `+=${Math.round(window.innerHeight * 1.35)}`,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => focusProject(Math.min(4, Math.floor(self.progress * 5))),
-        });
         gsap.fromTo(
           '.about',
           { clipPath: 'inset(0 8% 0 8%)' },
@@ -325,22 +283,6 @@ async function initMotion() {
             scrollTrigger: { trigger: '.about', start: 'top 95%', end: 'top 35%', scrub: 0.5 },
           },
         );
-      },
-    );
-
-    motionMedia.add(
-      '(min-width: 768px) and (max-width: 1099px) and (prefers-reduced-motion: no-preference)',
-      () => {
-        const triggers = projectRows.map((row, index) =>
-          ScrollTrigger.create({
-            trigger: row,
-            start: 'top 58%',
-            end: 'bottom 58%',
-            onEnter: () => focusProject(index),
-            onEnterBack: () => focusProject(index),
-          }),
-        );
-        return () => triggers.forEach((trigger) => trigger.kill());
       },
     );
 

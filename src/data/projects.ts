@@ -1,6 +1,7 @@
 import billonchok from '@/assets/projects/billonchok.png';
 import glamping from '@/assets/projects/glamping-look.png';
 import luxen from '@/assets/projects/inmobiliaria-luxen.png';
+import queseria from '@/assets/projects/la-queseria.png';
 import vital from '@/assets/projects/vital-health.png';
 import castilloReal from '@/assets/projects/hosteria-castillo-real.png';
 import type { Language } from '@/i18n/ui';
@@ -49,7 +50,7 @@ const projects = [
     id: 'inmobiliaria-luxen',
     name: 'Inmobiliaria Luxen',
     image: luxen,
-    url: 'https://realstate-liart.vercel.app/',
+    url: 'https://proyectinmobiliaria-w57x.vercel.app/',
     es: {
       category: 'INMOBILIARIA / CATÁLOGO',
       scope: 'Diseño · Desarrollo web',
@@ -61,6 +62,24 @@ const projects = [
       scope: 'Design · Web development',
       description:
         'A real estate experience for discovering properties, filtering opportunities and connecting with expert guidance in Ecuador.',
+    },
+  },
+  {
+    id: 'la-queseria',
+    name: 'La Quesería',
+    image: queseria,
+    url: 'https://la-queseria.vercel.app/',
+    es: {
+      category: 'ALIMENTACIÓN / CATÁLOGO DIGITAL',
+      scope: 'Diseño · Desarrollo · Pedidos por WhatsApp',
+      description:
+        'Una tienda de Santo Domingo con catálogo de quesos, lácteos y abarrotes, búsqueda de productos y pedidos por WhatsApp.',
+    },
+    en: {
+      category: 'FOOD / DIGITAL CATALOG',
+      scope: 'Design · Development · WhatsApp orders',
+      description:
+        'A Santo Domingo store with a catalog of cheeses, dairy and groceries, product search and WhatsApp ordering.',
     },
   },
   {

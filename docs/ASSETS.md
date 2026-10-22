@@ -4,7 +4,8 @@
 - Favicon: reutilizado del proyecto ATS.
 - Billonchok: captura de su web pública `https://www.billonchok.com/es/`, tomada el 17 de octubre de 2026. Se incluyó primero por indicación del propietario de ATS. La descripción se basa en el catálogo, idiomas y pedidos por WhatsApp observados en la web.
 - Glamping Look: `proyectouno.png` del portafolio original. El enlace `https://www.glampinglook.com/` respondía durante la revisión.
-- Inmobiliaria Luxen: captura de `https://realstate-liart.vercel.app/`, tomada el 18 de octubre de 2026. La descripción se basa en su buscador de propiedades y asesoría inmobiliaria.
+- Inmobiliaria Luxen: enlace y captura actualizados a `https://proyectinmobiliaria-w57x.vercel.app/` el 22 de octubre de 2026, por indicación del propietario. La descripción se basa en su buscador de propiedades y asesoría inmobiliaria.
+- La Quesería: captura de `https://la-queseria.vercel.app/`, tomada el 22 de octubre de 2026. Se coloca inmediatamente después de Luxen. La descripción se basa en el catálogo de quesos, lácteos y abarrotes, la búsqueda y los pedidos por WhatsApp del proyecto.
 - Vital Health MC: captura actualizada de `https://vital-health-iota.vercel.app/`, tomada el 18 de octubre de 2026. El proyecto enlaza a su implementación activa.
 - Hostería Castillo Real: captura de `https://hosteriacastilloreal.vercel.app/`, tomada el 18 de octubre de 2026. La descripción se basa en su oferta de hospedaje, gastronomía, eventos y reservas.
 

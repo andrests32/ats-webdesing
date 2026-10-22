@@ -19,11 +19,12 @@ const projects = getProjects(lang);
   aria-labelledby={reveal ? undefined : 'work-title'}
   aria-hidden={reveal ? 'true' : undefined}
   inert={reveal}
+  data-scroll-scene={reveal ? undefined : true}
 >
   <div class="work-stage page-gutter">
     <div class="chapter-heading">
       <SectionLabel number="02" text={t.work.label} />
-      <span class="chapter-counter font-mono" aria-hidden="true">
+      <span class="chapter-counter font-mono" aria-hidden="true" data-scroll-reveal="right">
         {t.work.active}{' '}
         <span
           data-work-counter={reveal ? undefined : true}
@@ -31,14 +32,14 @@ const projects = getProjects(lang);
         >
           01
         </span>{' '}
-        / 05
+        / {String(projects.length).padStart(2, '0')}
       </span>
-      <h2 id={reveal ? undefined : 'work-title'}>
+      <h2 id={reveal ? undefined : 'work-title'} data-scroll-reveal="left">
         {t.work.lines.map((line) => (
           <span>{line}</span>
         ))}
       </h2>
-      <p>{t.work.description}</p>
+      <p data-scroll-reveal="right">{t.work.description}</p>
     </div>
     <ol class="project-list" aria-label={reveal ? undefined : t.work.collection}>
       {projects.map((p, i) => (
@@ -54,6 +55,7 @@ const projects = getProjects(lang);
             aria-haspopup={reveal ? undefined : 'dialog'}
             aria-label={reveal ? undefined : `${t.work.open}: ${p.name}`}
             tabindex={reveal ? -1 : undefined}
+            data-scroll-reveal="up"
           >
             <span class="project-meta font-mono">
               <span>[ {p.category} ]</span>
@@ -70,7 +72,7 @@ const projects = getProjects(lang);
         </li>
       ))}
     </ol>
-    <div class="chapter-foot font-mono">
+    <div class="chapter-foot font-mono" data-scroll-reveal="up">
       <span>ATS — {t.work.label.toUpperCase()}</span>
       <span>
         {t.work.open} <span aria-hidden="true">↗</span>

@@ -20,12 +20,12 @@ const getSectionHref = (section: (typeof sectionIds)[number]) =>
   onLandingPage ? `#${section}` : `/${lang}/#${section}`;
 ---
 
-<footer class="footer page-gutter">
-  <div class="footer-top font-mono">
+<footer class="footer page-gutter" data-scroll-scene={onLandingPage ? true : undefined}>
+  <div class="footer-top font-mono" data-scroll-reveal="left">
     <span>{t.footer.location}</span>
     <a href={homeHref}>{t.footer.top} ↑</a>
   </div>
-  <nav class="footer-sections" aria-label={t.footer.sectionsLabel}>
+  <nav class="footer-sections" aria-label={t.footer.sectionsLabel} data-scroll-reveal="up">
     {sectionIds.map((section, index) => (
       <a href={getSectionHref(section)}>
         <span class="font-mono">{String(index + 1).padStart(2, '0')}</span>
@@ -33,7 +33,7 @@ const getSectionHref = (section: (typeof sectionIds)[number]) =>
       </a>
     ))}
   </nav>
-  <div class="footer-brand">
+  <div class="footer-brand" data-scroll-reveal="up">
     <Image src={logo} width={1600} alt="ATS" format="webp" loading="lazy" />
     <span>
       WEB
@@ -41,12 +41,12 @@ const getSectionHref = (section: (typeof sectionIds)[number]) =>
       STUDIO
     </span>
   </div>
-  <nav class="footer-legal font-mono" aria-label={t.footer.legalLabel}>
+  <nav class="footer-legal font-mono" aria-label={t.footer.legalLabel} data-scroll-reveal="left">
     {legalKeys.map((key) => (
       <a href={getLegalHref(lang, key)}>{legalLabels[key]} ↗</a>
     ))}
   </nav>
-  <div class="footer-bottom font-mono">
+  <div class="footer-bottom font-mono" data-scroll-reveal="up">
     <span>© {new Date().getFullYear()} ATS WEB STUDIO</span>
     <span>{t.footer.rights}</span>
     <a href={`mailto:${site.email}`}>{site.email.toUpperCase()} ↗</a>

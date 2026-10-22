@@ -8,15 +8,15 @@ Se recrea el lenguaje visual con componentes propios. No se copian los textos, l
 
 ## Secuencias
 
-1. Entrada escalonada del titular y el texto de presentación.
+1. Entrada escalonada del titular desde la izquierda, el texto desde la derecha y el pie del hero desde abajo, con recorridos más cortos en móvil.
 2. La franja naranja conserva la última posición del mouse y se expande desde ese punto durante el scroll. El capítulo de proyectos parte en crema y el mismo recorte naranja lo cubre progresivamente hasta revelar el capítulo completo.
-3. Proyectos fijos en escritorio amplio mientras el scroll cambia el enfoque de 01 a 05. La capa base ya utiliza texto blanco y la capa naranja ilumina el proyecto seleccionado sin mostrar miniaturas.
-4. Activación de servicios al pasar por el centro del viewport.
-5. Entrada del capítulo oscuro del estudio.
+3. Los seis proyectos se recorren con scroll natural, sin fijar una lista más alta que el viewport. El scroll cambia el enfoque de 01 a 06; la capa base y la capa naranja comparten entradas sincronizadas y no muestran miniaturas.
+4. Entradas laterales en los encabezados y desde abajo en las filas de proyectos y servicios. El contador de proyectos se calcula desde los datos.
+5. Estudio, Contacto y el footer comparten el mismo sistema de entradas ligado al scroll. El contenido queda visible sin JavaScript y con movimiento reducido.
 6. Menú lateral y ventanas de proyecto con apertura/cierre breve.
 7. En escritorio, la línea del hero se abre en una franja naranja que sigue al mouse y revela el texto en crema. Conserva su última posición y vuelve a un píxel después de 900 ms sin interacción; al hacer scroll, se ensancha desde allí hasta cubrir toda la pantalla y la sección de proyectos. La capa decorativa incluye la cabecera, no recibe clics ni foco y se desactiva en pantallas táctiles o con movimiento reducido.
 8. Los modales de proyecto ocultan la barra nativa y muestran un indicador naranja de un píxel únicamente mientras se desplazan. El control de cierre permanece visible.
 
-Las secuencias no compiten por el mismo elemento: los recortes afectan al capítulo y el pin al contenedor interior. Lenis comparte el ticker de GSAP. Se recalculan los puntos de scroll cuando las fuentes están listas.
+Las secuencias no compiten por el mismo elemento: los recortes afectan al capítulo y las entradas a sus elementos internos. Lenis comparte el ticker de GSAP. Se recalculan los puntos de scroll cuando las fuentes están listas.
 
-El tamaño mínimo del viewport y `prefers-reduced-motion` determinan la activación de efectos avanzados. El diseño base es visible sin depender de animaciones. Para cambiar intensidad y tiempos, editar `src/scripts/main.ts`; el seguimiento del mouse del hero está en `src/scripts/hero-reveal.ts`.
+El tipo de puntero, el viewport y `prefers-reduced-motion` determinan la activación de efectos avanzados. El diseño base es visible sin depender de animaciones. Para cambiar la entrada del hero, editar `src/scripts/main.ts`; las entradas de secciones están en `src/scripts/section-reveal.ts` y el seguimiento del mouse en `src/scripts/hero-reveal.ts`. En móvil no hay línea interactiva ni acceso a sensores.

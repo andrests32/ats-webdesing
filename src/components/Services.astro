@@ -7,22 +7,27 @@ interface Props {
 const t = getUI(Astro.props.lang);
 ---
 
-<section id="servicios" class="services page-gutter" aria-labelledby="services-title">
+<section
+  id="servicios"
+  class="services page-gutter"
+  aria-labelledby="services-title"
+  data-scroll-scene
+>
   <div class="chapter-heading">
     <SectionLabel number="03" text={t.services.label} />
-    <span class="chapter-counter font-mono" aria-hidden="true">
+    <span class="chapter-counter font-mono" aria-hidden="true" data-scroll-reveal="right">
       {t.work.active} <span data-service-counter>01</span> / 04
     </span>
-    <h2 id="services-title">
+    <h2 id="services-title" data-scroll-reveal="left">
       {t.services.lines.map((line) => (
         <span>{line}</span>
       ))}
     </h2>
-    <p>{t.services.description}</p>
+    <p data-scroll-reveal="right">{t.services.description}</p>
   </div>
   <ol class="service-list">
     {t.services.items.map((item, i) => (
-      <li class="service-row" data-service-index={i}>
+      <li class="service-row" data-service-index={i} data-scroll-reveal="up">
         <span class="service-tag font-mono">{item.tag}</span>
         <h3>{item.title}</h3>
         <span class="axis-number font-mono">{String(i + 1).padStart(2, '0')}</span>
@@ -31,14 +36,14 @@ const t = getUI(Astro.props.lang);
     ))}
   </ol>
   <div class="surface-system">
-    <div>
+    <div data-scroll-reveal="left">
       <h3 class="font-mono">{t.services.surface}</h3>
       <p>{t.services.surfaceText}</p>
     </div>
     <span class="axis-symbol" aria-hidden="true">
       [ ■ ]
     </span>
-    <div>
+    <div data-scroll-reveal="right">
       <h3 class="font-mono">{t.services.system}</h3>
       <p>{t.services.systemText}</p>
     </div>

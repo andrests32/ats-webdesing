@@ -30,7 +30,7 @@ Requisitos: Node **22.22 o superior** (recomendado Node 24) y pnpm **10.33.2**. 
 | `src/layouts/BaseLayout.astro` | Metadatos, idiomas, Open Graph y datos estructurados      |
 | `docs/`                        | Decisiones de diseño, fuentes de los activos y validación |
 
-Billonchok está primero. Después: Glamping Look, Inmobiliaria Luxen, Vital Health MC y Hostería Castillo Real. Para cambiar el orden, mover los objetos del arreglo de proyectos. Se usa una sola estructura y dos diccionarios, sin duplicar el diseño por idioma.
+Billonchok está primero. Después: Glamping Look, Inmobiliaria Luxen, La Quesería, Vital Health MC y Hostería Castillo Real. Para cambiar el orden, mover los objetos del arreglo de proyectos. La numeración y el total del contador se calculan desde ese arreglo. Se usa una sola estructura y dos diccionarios, sin duplicar el diseño por idioma.
 
 ## Comandos
 
@@ -67,11 +67,11 @@ El formulario valida nombre, correo y mensaje, y **abre un borrador de WhatsApp*
 
 ## Movimiento y accesibilidad
 
-GSAP coordina entrada del titular, apertura de capítulos, menú y ventanas. ScrollTrigger mantiene el capítulo de proyectos y activa uno por uno sin depender del hover. Las imágenes se reservan para las ventanas de detalle. Lenis suaviza el scroll en equipos con ratón. En móvil el desplazamiento es nativo; con movimiento reducido se desactivan las secuencias y las secciones fijas.
+GSAP coordina la entrada del titular, los capítulos, el menú y las ventanas. Proyectos, Servicios, Estudio, Contacto y el footer comparten entradas laterales o desde abajo, con opacidad ligada al scroll. Se ajustan en `src/scripts/section-reveal.ts`; en móvil los desplazamientos son más cortos. El listado de proyectos usa desplazamiento natural, sin fijar una lista que pueda superar la altura de la pantalla, y activa cada fila con el scroll. Las imágenes se reservan para las ventanas de detalle. Lenis suaviza el scroll en equipos con ratón; en móvil el desplazamiento es nativo.
 
 En escritorio, la línea del hero se abre en una franja naranja que sigue al mouse y revela el texto en crema. Conserva la última posición del mouse, vuelve a un píxel tras 900 ms sin movimiento y, durante el scroll, se ensancha desde ese punto sobre el fondo crema hasta cubrir el viewport y proyectos. Su ancho y suavidad se ajustan en `src/scripts/hero-reveal.ts`.
 
-En pantallas táctiles, la misma franja responde al inclinar el celular de lado a lado y al deslizar el dedo. Se calibra con la postura inicial y al rotar la pantalla, también en horizontal y en tablets. Chrome en Android empieza automáticamente cuando permite sensores; los navegadores que requieren permiso muestran «Activar movimiento». El estado activo solo se muestra después de recibir datos válidos. El botón permite pausar o reintentar; si no llegan datos, aparece una indicación para revisar el permiso de sensores. Se necesita HTTPS (una IP local por HTTP no sirve); en Chrome para Android, revisar Configuración → Configuración de sitios → Sensores de movimiento. Con `prefers-reduced-motion` se desactiva el efecto completo.
+En móvil y pantallas táctiles no hay línea interactiva, controles de movimiento ni acceso a sensores. El hero entra con texto desde los lados y desde abajo; las demás secciones responden al desplazamiento de la página. Con `prefers-reduced-motion` se desactivan las animaciones y todo el contenido queda visible. La capa naranja de proyectos comparte las animaciones de su capa base para conservar la alineación del texto en escritorio.
 
 Los diálogos usan `dialog` nativo, Escape, foco contenido y devolución del foco. El contenido principal y las vías directas de contacto siguen visibles sin JavaScript. Las fuentes Geist y Geist Mono se alojan con el proyecto; no se solicitan a Google Fonts.
 

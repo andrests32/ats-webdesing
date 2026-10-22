@@ -28,14 +28,6 @@ export const ui = {
       location: 'DESDE ZAMORA, ECUADOR, PARA EL MUNDO',
       cta: 'Hablemos',
       scroll: 'Explorar el trabajo',
-      motion: 'Activar movimiento',
-      motionActive: 'Movimiento activo · pausar',
-      motionWaiting: 'Conectando movimiento…',
-      motionRetry: 'Reintentar movimiento',
-      motionHint: 'Inclina el celular de lado a lado o desliza sobre la línea.',
-      motionUnavailable:
-        'No recibimos movimiento. Revisa el permiso de sensores en tu navegador o desliza sobre la línea.',
-      motionSecure: 'Abre la web con HTTPS para activar el movimiento o desliza sobre la línea.',
     },
     work: {
       label: 'Trabajo seleccionado',
@@ -176,14 +168,6 @@ export const ui = {
       location: 'FROM ZAMORA, ECUADOR, TO THE WORLD',
       cta: 'Let’s talk',
       scroll: 'Explore the work',
-      motion: 'Enable motion',
-      motionActive: 'Motion active · pause',
-      motionWaiting: 'Connecting motion…',
-      motionRetry: 'Retry motion',
-      motionHint: 'Tilt your phone from side to side or swipe across the line.',
-      motionUnavailable:
-        'No motion received. Check your browser’s sensor permission or swipe across the line.',
-      motionSecure: 'Open the site over HTTPS to enable motion or swipe across the line.',
     },
     work: {
       label: 'Selected work',

@@ -5,7 +5,7 @@ for (const lang of ['es', 'en']) {
     page,
     isMobile,
   }) => {
-    test.skip(isMobile, 'Touch and sensor interactions are covered in hero-motion.spec.ts.');
+    test.skip(isMobile, 'Mobile uses section entrances without a color band.');
     await page.goto(`/${lang}/`);
     await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
     const reveal = page.locator('.hero-reveal');
@@ -70,20 +70,15 @@ for (const lang of ['es', 'en']) {
       'color',
       'rgb(255, 255, 255)',
     );
-    await expect(revealWork.locator('[data-project-reveal-index="0"] .axis-number')).toHaveCSS(
+    await expect(revealWork.locator('.project-item.is-active .axis-number')).toHaveCSS(
       'background-color',
       'rgb(255, 255, 255)',
     );
 
-    const workStart = await page.locator('.work-motion').evaluate((work) => {
-      const bounds = work.getBoundingClientRect();
-      return bounds.top + window.scrollY;
-    });
-    await page.evaluate(
-      (top) => window.scrollTo({ top, behavior: 'instant' }),
-      workStart + viewport.height * 0.68,
-    );
     const activeProject = page.locator('[data-project-index="2"]');
+    await activeProject.evaluate((row) =>
+      row.scrollIntoView({ block: 'center', behavior: 'instant' }),
+    );
     await expect(activeProject).toHaveClass(/is-active/);
     await expect(page.locator('.project-thumbnail')).toHaveCount(0);
     await page.locator('[data-project-index="4"] .project-row').dispatchEvent('pointerenter');
@@ -139,7 +134,23 @@ for (const lang of ['es', 'en']) {
     );
     const baseWork = page.locator('.work-chapter:not(.work-chapter-reveal)');
     await expect(baseWork.locator('.project-name').first()).toHaveText('Billonchok');
-    await expect(baseWork.locator('.project-list > li')).toHaveCount(5);
+    await expect(baseWork.locator('.project-name')).toHaveText([
+      'Billonchok',
+      'Glamping Look',
+      'Inmobiliaria Luxen',
+      'La Quesería',
+      'Vital Health MC',
+      'Hostería Castillo Real',
+    ]);
+    await expect(baseWork.locator('.chapter-counter')).toContainText('/ 06');
+    await expect(page.locator('#project-inmobiliaria-luxen a[target="_blank"]')).toHaveAttribute(
+      'href',
+      'https://proyectinmobiliaria-w57x.vercel.app/',
+    );
+    await expect(page.locator('#project-la-queseria a[target="_blank"]')).toHaveAttribute(
+      'href',
+      'https://la-queseria.vercel.app/',
+    );
     const numberBox = await baseWork.locator('.project-row .axis-number').first().boundingBox();
     const nameBox = await baseWork.locator('.project-name').first().boundingBox();
     const detailBox = await baseWork.locator('.project-detail').first().boundingBox();
@@ -215,6 +226,7 @@ for (const lang of ['es', 'en']) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(
       true,
     );
+    await page.locator('[data-project-index="0"]').scrollIntoViewIfNeeded();
     await page.locator('[data-dialog-open="project-billonchok"]').click();
     const dialog = page.locator('#project-billonchok');
     await expect(dialog).toBeVisible();
@@ -235,6 +247,8 @@ test('project dialog uses a minimal scrollbar that hides after use', async ({ pa
   const viewport = page.viewportSize()!;
   await page.setViewportSize({ width: viewport.width, height: Math.min(viewport.height, 560) });
   await page.goto('/es/');
+  await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
+  await page.locator('[data-project-index="0"]').scrollIntoViewIfNeeded();
   await page.locator('[data-dialog-open="project-billonchok"]').click();
   const dialog = page.locator('#project-billonchok');
   const scrollArea = dialog.locator('[data-project-dialog-scroll]');

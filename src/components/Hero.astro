@@ -24,33 +24,6 @@ const Heading = reveal ? 'p' : 'h1';
     <p class="hero-description" data-hero-description>
       {t.hero.description}
     </p>
-    <button
-      class="gyro-control font-mono"
-      type="button"
-      hidden
-      aria-pressed="false"
-      aria-describedby={reveal ? undefined : 'hero-motion-hint'}
-      data-gyro-enable={reveal ? undefined : true}
-      data-idle-label={t.hero.motion}
-      data-active-label={t.hero.motionActive}
-      data-waiting-label={t.hero.motionWaiting}
-      data-unavailable-label={t.hero.motionRetry}
-    >
-      <span aria-hidden="true"></span>
-      <span data-gyro-label>{t.hero.motion}</span>
-    </button>
-    <p
-      id={reveal ? undefined : 'hero-motion-hint'}
-      class="gyro-hint font-mono"
-      hidden
-      data-motion-hint
-      data-default-hint={t.hero.motionHint}
-      data-unavailable-hint={t.hero.motionUnavailable}
-      data-secure-hint={t.hero.motionSecure}
-      aria-live={reveal ? undefined : 'polite'}
-    >
-      {t.hero.motionHint}
-    </p>
   </div>
   <div class="hero-bottom">
     <div class="hero-location font-mono">
