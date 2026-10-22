@@ -2,6 +2,7 @@ import gsap from 'gsap';
 
 type RevealInput = 'pointer' | 'motion';
 type MotionPermission = 'granted' | 'denied';
+type MotionState = 'idle' | 'waiting' | 'active' | 'unavailable';
 type PermissionedOrientationEvent = typeof DeviceOrientationEvent & {
   requestPermission?: () => Promise<MotionPermission>;
 };
@@ -19,7 +20,14 @@ function createHeroReveal(input: RevealInput) {
   const trackedElements = [header, hero];
   let idleTimeout: number | undefined;
   let touching = false;
-  let motionEnabled = false;
+  let motionListening = false;
+  let requestingPermission = false;
+  let disposed = false;
+  let sensorTimeout: number | undefined;
+  let motionState: MotionState = 'idle';
+  let neutralTilt: number | undefined;
+  let neutralPosition = axis;
+  let previousScreenAngle: number | undefined;
   let previousMotionPosition: number | undefined;
 
   const render = () => {
@@ -37,7 +45,7 @@ function createHeroReveal(input: RevealInput) {
   };
 
   const move = gsap.quickTo(reveal, 'position', {
-    duration: input === 'motion' ? 0.6 : 0.45,
+    duration: input === 'motion' ? 0.35 : 0.45,
     ease: 'power3.out',
     onUpdate: render,
   });
@@ -65,6 +73,7 @@ function createHeroReveal(input: RevealInput) {
   };
   const startTouch = (event: PointerEvent) => {
     if (event.pointerType !== 'touch') return;
+    if ((event.target as Element).closest('button, a, input, select, textarea')) return;
     touching = true;
     moveFromClientX(event.clientX, gsap.utils.clamp(20, 34, hero.clientWidth * 0.06));
   };
@@ -73,33 +82,70 @@ function createHeroReveal(input: RevealInput) {
     moveFromClientX(event.clientX, gsap.utils.clamp(20, 34, hero.clientWidth * 0.06));
   };
   const stopTouch = () => {
+    if (!touching) return;
     touching = false;
+    // Resume tilt from the position chosen by the finger, without snapping back.
+    neutralTilt = undefined;
+    previousMotionPosition = undefined;
   };
 
   const controls = [...shell.querySelectorAll<HTMLButtonElement>('.gyro-control')];
   const motionControl = hero.querySelector<HTMLButtonElement>('[data-gyro-enable]');
-  const supportsOrientation = 'DeviceOrientationEvent' in window;
-  const setMotionState = (active: boolean) => {
+  const OrientationEvent = window.DeviceOrientationEvent as
+    PermissionedOrientationEvent | undefined;
+  const supportsOrientation = window.isSecureContext && typeof OrientationEvent === 'function';
+  const hints = [...shell.querySelectorAll<HTMLElement>('[data-motion-hint]')];
+  const setMotionState = (state: MotionState) => {
+    motionState = state;
     controls.forEach((control) => {
+      const active = state === 'active';
       control.classList.toggle('is-active', active);
       control.setAttribute('aria-pressed', String(active));
+      control.setAttribute('aria-busy', String(state === 'waiting'));
       const label = control.querySelector<HTMLElement>('[data-gyro-label]');
-      if (active && label && control.dataset.activeLabel)
-        label.textContent = control.dataset.activeLabel;
+      if (label) label.textContent = control.dataset[`${state}Label`] || '';
+    });
+    hints.forEach((hint) => {
+      const message = !window.isSecureContext
+        ? hint.dataset.secureHint
+        : state === 'unavailable'
+          ? hint.dataset.unavailableHint
+          : hint.dataset.defaultHint;
+      hint.textContent = message || '';
     });
   };
   const handleOrientation = (event: DeviceOrientationEvent) => {
-    if (!motionEnabled || document.documentElement.dataset.overlay || transition.progress > 0.01)
+    if (!motionListening || disposed || document.hidden) return;
+    const { beta, gamma } = event;
+    if (beta === null || gamma === null || !Number.isFinite(beta) || !Number.isFinite(gamma))
       return;
 
-    const angle = window.screen.orientation?.angle || 0;
-    const landscape = Math.abs(angle) % 180 === 90;
-    const tilt = landscape ? event.beta : event.gamma;
-    if (tilt === null) return;
+    window.clearTimeout(sensorTimeout);
+    if (motionState !== 'active') setMotionState('active');
+    if (touching || document.documentElement.dataset.overlay || transition.progress > 0.01) {
+      neutralTilt = undefined;
+      previousMotionPosition = undefined;
+      return;
+    }
 
-    const direction = angle === 90 || angle === 180 ? -1 : 1;
-    const position = gsap.utils.mapRange(-32, 32, 12, 88, tilt * direction);
-    const clampedPosition = gsap.utils.clamp(12, 88, position);
+    const angle = window.screen.orientation?.angle ?? 0;
+    const radians = Math.PI / 180;
+    // Project gravity onto the screen's horizontal axis. Raw gamma jumps near
+    // an upright phone; this projection stays continuous across that boundary.
+    const horizontalGravity =
+      Math.cos(beta * radians) * Math.sin(gamma * radians) * Math.cos(angle * radians) -
+      Math.sin(beta * radians) * Math.sin(angle * radians);
+    const tilt = Math.asin(gsap.utils.clamp(-1, 1, horizontalGravity)) / radians;
+    if (neutralTilt === undefined || angle !== previousScreenAngle) {
+      neutralTilt = tilt;
+      neutralPosition = reveal.position;
+      previousMotionPosition = reveal.position;
+      previousScreenAngle = angle;
+      return;
+    }
+
+    // A comfortable 25-degree lean travels half the viewport from the neutral pose.
+    const clampedPosition = gsap.utils.clamp(0, 100, neutralPosition + (tilt - neutralTilt) * 2);
     if (
       previousMotionPosition !== undefined &&
       Math.abs(clampedPosition - previousMotionPosition) < 0.35
@@ -110,22 +156,49 @@ function createHeroReveal(input: RevealInput) {
     move(clampedPosition);
     emphasize(gsap.utils.clamp(20, 34, hero.clientWidth * 0.06));
   };
-  const enableMotion = async (event: Event) => {
-    event.stopPropagation();
-    if (motionEnabled || !supportsOrientation) return;
+  const stopMotion = () => {
+    motionListening = false;
+    window.clearTimeout(sensorTimeout);
+    window.removeEventListener('deviceorientation', handleOrientation);
+    neutralTilt = undefined;
+    previousMotionPosition = undefined;
+  };
+  const startMotion = () => {
+    stopMotion();
+    motionListening = true;
+    setMotionState('waiting');
+    window.addEventListener('deviceorientation', handleOrientation, { passive: true });
+    sensorTimeout = window.setTimeout(() => {
+      if (motionState === 'waiting') setMotionState('unavailable');
+      // Keep listening: a late sensor reading can still recover automatically.
+    }, 4000);
+  };
+  const enableMotion = async () => {
+    if (disposed || requestingPermission || !supportsOrientation || !OrientationEvent) return;
+    requestingPermission = true;
+    setMotionState('waiting');
 
     try {
-      const OrientationEvent = window.DeviceOrientationEvent as PermissionedOrientationEvent;
-      const permission = OrientationEvent.requestPermission
-        ? await OrientationEvent.requestPermission()
-        : 'granted';
-      if (permission !== 'granted') return;
-
-      motionEnabled = true;
-      setMotionState(true);
-      window.addEventListener('deviceorientation', handleOrientation, true);
+      const permission =
+        typeof OrientationEvent.requestPermission === 'function'
+          ? await OrientationEvent.requestPermission()
+          : 'granted';
+      if (disposed) return;
+      if (permission === 'granted') startMotion();
+      else setMotionState('unavailable');
     } catch {
-      // Touch tracking remains available when the browser denies sensor access.
+      if (!disposed) setMotionState('unavailable');
+    } finally {
+      requestingPermission = false;
+    }
+  };
+  const toggleMotion = (event: Event) => {
+    event.stopPropagation();
+    if (motionState === 'active') {
+      stopMotion();
+      setMotionState('idle');
+    } else if (motionState !== 'waiting') {
+      void enableMotion();
     }
   };
 
@@ -155,10 +228,22 @@ function createHeroReveal(input: RevealInput) {
     window.addEventListener('pointerup', stopTouch);
     window.addEventListener('pointercancel', stopTouch);
     controls.forEach((control) => (control.hidden = !supportsOrientation));
-    motionControl?.addEventListener('click', enableMotion);
+    hints.forEach((hint) => (hint.hidden = false));
+    setMotionState(supportsOrientation ? 'idle' : 'unavailable');
+    motionControl?.addEventListener('click', toggleMotion);
+    // Chrome on Android can start immediately; permission-based browsers must
+    // call requestPermission synchronously from the button's click handler.
+    if (supportsOrientation && typeof OrientationEvent?.requestPermission !== 'function') {
+      void enableMotion();
+    }
   }
 
   return () => {
+    disposed = true;
+    stopMotion();
+    setMotionState('idle');
+    controls.forEach((control) => (control.hidden = true));
+    hints.forEach((hint) => (hint.hidden = true));
     trackedElements.forEach((element) => {
       element.removeEventListener('pointermove', trackPointer);
       element.removeEventListener('pointerdown', startTouch);
@@ -166,8 +251,7 @@ function createHeroReveal(input: RevealInput) {
     });
     window.removeEventListener('pointerup', stopTouch);
     window.removeEventListener('pointercancel', stopTouch);
-    window.removeEventListener('deviceorientation', handleOrientation, true);
-    motionControl?.removeEventListener('click', enableMotion);
+    motionControl?.removeEventListener('click', toggleMotion);
     move.tween.kill();
     widen.tween.kill();
     if (idleTimeout) window.clearTimeout(idleTimeout);

@@ -5,14 +5,10 @@ for (const lang of ['es', 'en']) {
     page,
     isMobile,
   }) => {
+    test.skip(isMobile, 'Touch and sensor interactions are covered in hero-motion.spec.ts.');
     await page.goto(`/${lang}/`);
     await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
     const reveal = page.locator('.hero-reveal');
-    if (isMobile) {
-      await expect(reveal).toBeHidden();
-      return;
-    }
-
     await expect(reveal).toBeVisible();
     await expect(reveal).toHaveAttribute('aria-hidden', 'true');
     await expect(reveal).toHaveAttribute('inert', '');
@@ -308,6 +304,9 @@ test('contact validates fields and prepares a correctly encoded WhatsApp draft',
     }) as typeof window.open;
   });
   await page.goto('/es/');
+  // Contact controls are revealed by scrolling into their section.
+  await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
+  await page.locator('#contacto').scrollIntoViewIfNeeded();
   await page.locator('[data-dialog-open="contact-dialog"]').click();
   const form = page.locator('#project-inquiry');
   await form.locator('button[type="submit"]').click();

@@ -236,11 +236,11 @@ async function initMotion() {
   await document.fonts.ready;
   if (document.querySelector('.hero')) {
     motionMedia.add(
-      '(min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
+      '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
       initHeroReveal,
     );
     motionMedia.add(
-      '(max-width: 767px) and (prefers-reduced-motion: no-preference)',
+      '(pointer: coarse) and (prefers-reduced-motion: no-preference), (hover: none) and (prefers-reduced-motion: no-preference)',
       initMobileHeroReveal,
     );
     motionMedia.add('(prefers-reduced-motion: no-preference)', () => {
