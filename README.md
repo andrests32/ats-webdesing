@@ -30,7 +30,7 @@ Requisitos: Node **22.22 o superior** (recomendado Node 24) y pnpm **10.33.2**. 
 | `src/layouts/BaseLayout.astro` | Metadatos, idiomas, Open Graph y datos estructurados      |
 | `docs/`                        | Decisiones de diseño, fuentes de los activos y validación |
 
-Billonchok está primero. Después: Glamping Look, Decorteja, Vital Health MC y Vallicoffee. Para cambiar el orden, mover los objetos del arreglo de proyectos. Se usa una sola estructura y dos diccionarios, sin duplicar el diseño por idioma.
+Billonchok está primero. Después: Glamping Look, Inmobiliaria Luxen, Vital Health MC y Hostería Castillo Real. Para cambiar el orden, mover los objetos del arreglo de proyectos. Se usa una sola estructura y dos diccionarios, sin duplicar el diseño por idioma.
 
 ## Comandos
 
@@ -84,3 +84,4 @@ El footer enlaza a Privacidad, Términos y Cancelaciones/Reembolsos en español 
 ## Stack
 
 Astro 7, TypeScript 6, Tailwind CSS 4, GSAP 3, Lenis 1 y pnpm. No se añade React porque esta experiencia no lo necesita.
+# ats-webdesing
